@@ -25,16 +25,25 @@ def test_index_renders_entries(auth_client):
         responses.GET, f"{BASE}/api/activities",
         json=[{"id": 1, "name": "Work", "color": None, "running": False}], status=200,
     )
+    # First call: today's entries (from/to params)
     responses.add(
         responses.GET, f"{BASE}/api/entries",
-        json=[{"id": 9, "activity_id": 1, "started_at": "2026-06-20T09:00:00Z",
-               "ended_at": "2026-06-20T10:00:00Z", "note": "stuff", "duration_seconds": 3600}],
+        json=[{"id": 1, "activity_id": 1, "started_at": "2026-06-20T08:00:00Z",
+               "ended_at": "2026-06-20T09:00:00Z", "note": None, "duration_seconds": 3600}],
+        status=200,
+    )
+    # Second call: running entries (running=true param)
+    responses.add(
+        responses.GET, f"{BASE}/api/entries",
+        json=[],
         status=200,
     )
     resp = auth_client.get("/")
     assert resp.status_code == 200
     assert b"Work" in resp.data
     assert b"1h 0m" in resp.data
+    # Verify running section is empty (no entry names in running section)
+    assert b"No entries today." not in resp.data  # Today section has an entry
 
 
 @responses.activate
