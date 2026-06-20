@@ -39,9 +39,7 @@ def test_get_activity(client, auth_headers):
 
 def test_update_activity(client, auth_headers):
     aid = _create(client, auth_headers).get_json()["id"]
-    resp = client.patch(
-        f"/api/activities/{aid}", headers=auth_headers, json={"name": "Deep Work"}
-    )
+    resp = client.patch(f"/api/activities/{aid}", headers=auth_headers, json={"name": "Deep Work"})
     assert resp.status_code == 200
     assert resp.get_json()["name"] == "Deep Work"
     assert resp.get_json()["color"] == "#3b82f6"  # unchanged

@@ -217,8 +217,8 @@ def test_list_entries_with_offset_zero(client, auth_headers):
             headers=auth_headers,
             json={
                 "activity_id": aid,
-                "started_at": f"2026-06-{20-i}T09:00:00Z",
-                "ended_at": f"2026-06-{20-i}T10:00:00Z",
+                "started_at": f"2026-06-{20 - i}T09:00:00Z",
+                "ended_at": f"2026-06-{20 - i}T10:00:00Z",
             },
         )
     # With offset=0, should return all 3
@@ -236,8 +236,8 @@ def test_list_entries_with_limit_zero(client, auth_headers):
             headers=auth_headers,
             json={
                 "activity_id": aid,
-                "started_at": f"2026-06-{20-i}T09:00:00Z",
-                "ended_at": f"2026-06-{20-i}T10:00:00Z",
+                "started_at": f"2026-06-{20 - i}T09:00:00Z",
+                "ended_at": f"2026-06-{20 - i}T10:00:00Z",
             },
         )
     # With limit=0, should return empty list
@@ -255,8 +255,8 @@ def test_list_entries_with_offset_and_limit(client, auth_headers):
             headers=auth_headers,
             json={
                 "activity_id": aid,
-                "started_at": f"2026-06-{25-i}T09:00:00Z",
-                "ended_at": f"2026-06-{25-i}T10:00:00Z",
+                "started_at": f"2026-06-{25 - i}T09:00:00Z",
+                "ended_at": f"2026-06-{25 - i}T10:00:00Z",
             },
         )
     # With offset=2 and limit=2, should return entries 2 and 3 (0-indexed)

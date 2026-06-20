@@ -14,9 +14,7 @@ def json_response(payload, status: int = 200):
     if isinstance(payload, BaseModel):
         payload = payload.model_dump(mode="json")
     elif isinstance(payload, list):
-        payload = [
-            p.model_dump(mode="json") if isinstance(p, BaseModel) else p for p in payload
-        ]
+        payload = [p.model_dump(mode="json") if isinstance(p, BaseModel) else p for p in payload]
     return jsonify(payload), status
 
 

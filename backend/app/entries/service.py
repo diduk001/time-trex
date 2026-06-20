@@ -9,9 +9,9 @@ from app.timeutils import utcnow
 
 def _get_owned_entry(user_id: int, entry_id: int) -> TimeEntry:
     entry = db.session.scalar(
-        db.select(TimeEntry).join(Activity).where(
-            TimeEntry.id == entry_id, Activity.user_id == user_id
-        )
+        db.select(TimeEntry)
+        .join(Activity)
+        .where(TimeEntry.id == entry_id, Activity.user_id == user_id)
     )
     if entry is None:
         raise NotFoundError("Time entry not found")
@@ -31,9 +31,7 @@ def start_entry(
     get_activity(user_id, activity_id)  # ownership / existence -> 404
     if _has_running_entry(activity_id):
         raise ConflictError("Activity already has a running entry")
-    entry = TimeEntry(
-        activity_id=activity_id, started_at=started_at or utcnow(), note=note
-    )
+    entry = TimeEntry(activity_id=activity_id, started_at=started_at or utcnow(), note=note)
     db.session.add(entry)
     db.session.commit()
     return entry
@@ -61,9 +59,7 @@ def create_manual(
     get_activity(user_id, activity_id)  # ownership / existence -> 404
     if ended_at <= started_at:
         raise UnprocessableError("ended_at must be after started_at")
-    entry = TimeEntry(
-        activity_id=activity_id, started_at=started_at, ended_at=ended_at, note=note
-    )
+    entry = TimeEntry(activity_id=activity_id, started_at=started_at, ended_at=ended_at, note=note)
     db.session.add(entry)
     db.session.commit()
     return entry

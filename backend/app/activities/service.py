@@ -14,9 +14,7 @@ def list_activities(user_id: int) -> list[Activity]:
 
 
 def get_activity(user_id: int, activity_id: int) -> Activity:
-    activity = db.session.scalar(
-        db.select(Activity).filter_by(id=activity_id, user_id=user_id)
-    )
+    activity = db.session.scalar(db.select(Activity).filter_by(id=activity_id, user_id=user_id))
     if activity is None:
         raise NotFoundError("Activity not found")
     return activity
