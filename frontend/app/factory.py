@@ -1,5 +1,6 @@
 from flask import Flask
 
+from app.auth.routes import bp as auth_bp
 from app.config import BaseConfig, get_config
 from app.errors import register_error_handlers
 from app.filters import dt_input, fmt_dt, fmt_duration
@@ -25,5 +26,6 @@ def create_app(config: str | type | None = None) -> Flask:
     def ping():
         return {"status": "ok"}
 
+    app.register_blueprint(auth_bp)
     register_error_handlers(app)
     return app
