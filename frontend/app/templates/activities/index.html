@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Activities · Time T-Rex{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Activities</h1>
+
+<form method="post" action="{{ url_for('activities.create') }}" class="row g-2 mb-4">
+  <div class="col-auto">
+    <input class="form-control" name="name" placeholder="New activity name" required>
+  </div>
+  <div class="col-auto">
+    <input class="form-control form-control-color" type="color" name="color" value="#0d6efd"
+           title="Color">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" type="submit">Add</button>
+  </div>
+</form>
+
+<table class="table align-middle">
+  <thead><tr><th>Name</th><th>Color</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+  <tbody>
+  {% for a in activities %}
+    <tr>
+      <td>{{ a.name }}</td>
+      <td><span class="badge" style="background-color: {{ a.color or '#6c757d' }}">{{ a.color or '—' }}</span></td>
+      <td>{% if a.running %}<span class="badge bg-success">running</span>{% else %}<span class="text-muted">idle</span>{% endif %}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('activities.edit', activity_id=a.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('activities.delete', activity_id=a.id) }}" class="d-inline">
+          <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="4" class="text-muted">No activities yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

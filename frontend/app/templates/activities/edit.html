@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Edit activity · Time T-Rex{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Edit activity</h1>
+<form method="post" action="{{ url_for('activities.update', activity_id=activity.id) }}" class="row g-2">
+  <div class="col-auto">
+    <input class="form-control" name="name" value="{{ activity.name }}" required>
+  </div>
+  <div class="col-auto">
+    <input class="form-control form-control-color" type="color" name="color"
+           value="{{ activity.color or '#0d6efd' }}">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-link" href="{{ url_for('activities.index') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

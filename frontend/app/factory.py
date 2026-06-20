@@ -1,5 +1,6 @@
 from flask import Flask
 
+from app.activities.routes import bp as activities_bp
 from app.auth.routes import bp as auth_bp
 from app.config import BaseConfig, get_config
 from app.errors import register_error_handlers
@@ -27,5 +28,6 @@ def create_app(config: str | type | None = None) -> Flask:
         return {"status": "ok"}
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(activities_bp)
     register_error_handlers(app)
     return app
