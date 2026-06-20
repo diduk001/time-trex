@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand bg-dark" data-bs-theme="dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">🦖 Time T-Rex</a>
+    <ul class="navbar-nav">
+      {% if session.get('access_token') %}
+        {% if has_endpoint('tracking.index') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('tracking.index') }}">Tracking</a></li>
+        {% endif %}
+        {% if has_endpoint('activities.index') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('activities.index') }}">Activities</a></li>
+        {% endif %}
+        {% if has_endpoint('stats.index') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('stats.index') }}">Stats</a></li>
+        {% endif %}
+        {% if has_endpoint('auth.logout') %}
+          <li class="nav-item">
+            <form action="{{ url_for('auth.logout') }}" method="post" class="d-inline">
+              <button class="btn btn-link nav-link" type="submit">Logout</button>
+            </form>
+          </li>
+        {% endif %}
+      {% else %}
+        {% if has_endpoint('auth.login') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+        {% endif %}
+        {% if has_endpoint('auth.register') %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></li>
+        {% endif %}
+      {% endif %}
+    </ul>
+  </div>
+</nav>
