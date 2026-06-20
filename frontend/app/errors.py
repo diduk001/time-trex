@@ -10,7 +10,7 @@ def register_error_handlers(app):
             session.clear()
             flash("Your session has expired, please log in again.", "warning")
             return redirect(url_for("auth.login"))
-        if err.status == 503:
+        if err.status >= 500:
             return render_template("errors/backend_unavailable.html", message=err.message), 503
         flash(err.message, "danger")
         return redirect(request.referrer or "/")

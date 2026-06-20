@@ -1,3 +1,4 @@
+from app.backend_client import BackendError
 from app.filters import dt_input, fmt_dt, fmt_duration
 
 
@@ -31,3 +32,25 @@ def test_current_client_uses_session_token(app):
         c = current_client()
         assert c.token == "tok"
         assert c.base_url == "http://backend.test"
+
+
+def test_backend_error_500_renders_unavailable_page(app, client):
+    """Test that BackendError with status 500 renders backend_unavailable page."""
+
+    @app.route("/test_500")
+    def test_500_route():
+        raise BackendError(500, "internal_error", "Internal server error")
+
+    resp = client.get("/test_500")
+    assert resp.status_code == 503
+
+
+def test_backend_error_503_renders_unavailable_page(app, client):
+    """Test that BackendError with status 503 renders backend_unavailable page."""
+
+    @app.route("/test_503")
+    def test_503_route():
+        raise BackendError(503, "backend_unavailable", "Backend is unavailable")
+
+    resp = client.get("/test_503")
+    assert resp.status_code == 503
