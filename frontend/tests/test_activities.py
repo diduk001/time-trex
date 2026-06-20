@@ -35,6 +35,20 @@ def test_create_posts_to_backend(auth_client):
 
 
 @responses.activate
+def test_create_without_color(auth_client):
+    responses.add(
+        responses.POST, f"{BASE}/api/activities",
+        json={"id": 1, "name": "Work", "color": None}, status=201,
+    )
+    resp = auth_client.post("/activities", data={"name": "Work", "color": ""})
+    assert resp.status_code == 302
+    assert resp.headers["Location"] == "/activities"
+    import json as _json
+    request_body = _json.loads(responses.calls[0].request.body)
+    assert "color" not in request_body
+
+
+@responses.activate
 def test_create_duplicate_flashes(auth_client):
     responses.add(
         responses.POST, f"{BASE}/api/activities",
@@ -45,8 +59,6 @@ def test_create_duplicate_flashes(auth_client):
     )
     assert resp.status_code == 302
     assert resp.headers["Location"] == "/activities"
-    responses.add(responses.GET, f"{BASE}/api/activities", json=[], status=200)
-    auth_client.get("/activities")
 
 
 @responses.activate
