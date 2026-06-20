@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Edit entry · Time T-Rex{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Edit entry <small class="text-muted fs-6">(times in UTC)</small></h1>
+<form method="post" action="{{ url_for('tracking.update', entry_id=entry.id) }}" class="row g-2 align-items-end">
+  <div class="col-auto">
+    <label class="form-label">Activity</label>
+    <select class="form-select" name="activity_id" required>
+      {% for a in activities %}
+        <option value="{{ a.id }}" {% if a.id == entry.activity_id %}selected{% endif %}>{{ a.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <label class="form-label">Start (UTC)</label>
+    <input class="form-control" type="datetime-local" name="started_at"
+           value="{{ entry.started_at|dt_input }}" required>
+  </div>
+  <div class="col-auto">
+    <label class="form-label">End (UTC)</label>
+    <input class="form-control" type="datetime-local" name="ended_at"
+           value="{{ entry.ended_at|dt_input }}">
+  </div>
+  <div class="col-auto">
+    <label class="form-label">Note</label>
+    <input class="form-control" name="note" value="{{ entry.note or '' }}">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-link" href="{{ url_for('tracking.index') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

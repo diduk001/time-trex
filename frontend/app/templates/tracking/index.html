@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Tracking · Time T-Rex{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Tracking <small class="text-muted fs-6">(times in UTC)</small></h1>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <form method="post" action="{{ url_for('tracking.start') }}" class="row g-2 align-items-end">
+      <div class="col-auto">
+        <label class="form-label">Start tracking</label>
+        <select class="form-select" name="activity_id" required>
+          {% for a in activities %}<option value="{{ a.id }}">{{ a.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-success" type="submit">Start</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if running %}
+<h2 class="h5">Running now</h2>
+<table class="table align-middle">
+  <tbody>
+  {% for e in running %}
+    <tr>
+      <td>{{ activity_names.get(e.activity_id, '?') }}</td>
+      <td>running since {{ e.started_at|fmt_dt }}</td>
+      <td class="text-end">
+        <form method="post" action="{{ url_for('tracking.stop', entry_id=e.id) }}" class="d-inline">
+          <button class="btn btn-sm btn-warning" type="submit">Stop</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<h2 class="h5 mt-4">Today</h2>
+<table class="table align-middle">
+  <thead><tr><th>Activity</th><th>Start</th><th>End</th><th>Duration</th><th>Note</th><th class="text-end">Actions</th></tr></thead>
+  <tbody>
+  {% for e in entries %}
+    <tr>
+      <td>{{ activity_names.get(e.activity_id, '?') }}</td>
+      <td>{{ e.started_at|fmt_dt }}</td>
+      <td>{{ e.ended_at|fmt_dt or '—' }}</td>
+      <td>{{ e.duration_seconds|fmt_duration }}</td>
+      <td>{{ e.note or '' }}</td>
+      <td class="text-end">
+        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('tracking.edit', entry_id=e.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('tracking.delete', entry_id=e.id) }}" class="d-inline">
+          <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+  {% else %}
+    <tr><td colspan="6" class="text-muted">No entries today.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<h2 class="h5 mt-4">Add a past entry</h2>
+<form method="post" action="{{ url_for('tracking.create') }}" class="row g-2 align-items-end">
+  <div class="col-auto">
+    <label class="form-label">Activity</label>
+    <select class="form-select" name="activity_id" required>
+      {% for a in activities %}<option value="{{ a.id }}">{{ a.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <label class="form-label">Start (UTC)</label>
+    <input class="form-control" type="datetime-local" name="started_at" required>
+  </div>
+  <div class="col-auto">
+    <label class="form-label">End (UTC)</label>
+    <input class="form-control" type="datetime-local" name="ended_at" required>
+  </div>
+  <div class="col-auto">
+    <label class="form-label">Note</label>
+    <input class="form-control" name="note">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" type="submit">Add</button>
+  </div>
+</form>
+{% endblock %}
