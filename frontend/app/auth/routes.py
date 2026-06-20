@@ -20,7 +20,7 @@ def login():
         flash("Invalid login or password.", "danger")
         return render_template("auth/login.html", login=login_value), 400
     session["access_token"] = result["access_token"]
-    return redirect("/")  # tracking home
+    return redirect(url_for("tracking.index"))
 
 
 @bp.route("/register", methods=["GET", "POST"])
@@ -37,7 +37,7 @@ def register():
         flash(exc.message, "danger")
         return render_template("auth/register.html", login=login_value), 400
     session["access_token"] = result["access_token"]
-    return redirect("/")  # tracking home
+    return redirect(url_for("tracking.index"))
 
 
 @bp.post("/logout")

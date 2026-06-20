@@ -87,8 +87,7 @@ def update(entry_id):
         "note": request.form.get("note") or None,
     }
     ended = _to_utc_iso(request.form.get("ended_at"))
-    if ended is not None:
-        fields["ended_at"] = ended
+    fields["ended_at"] = ended  # always include; None becomes null in JSON → clears the field
     current_client().update_entry(entry_id, **fields)
     flash("Entry updated.", "success")
     return redirect(url_for("tracking.index"))

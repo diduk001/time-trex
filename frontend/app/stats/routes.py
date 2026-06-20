@@ -32,7 +32,10 @@ def index():
     default_from, default_to = _default_range()
     frm = _norm(request.args.get("from"), default_from)
     to = _norm(request.args.get("to"), default_to)
-    group_by = request.args.get("group_by") or "day"
+    VALID_GROUP_BY = {"day", "week", "month"}
+    group_by = request.args.get("group_by", "day")
+    if group_by not in VALID_GROUP_BY:
+        group_by = "day"
     client = current_client()
     summary = client.stats_summary(**{"from": frm, "to": to})
     timeline = client.stats_timeline(**{"from": frm, "to": to, "group_by": group_by})

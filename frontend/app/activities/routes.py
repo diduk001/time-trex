@@ -34,7 +34,10 @@ def edit(activity_id):
 def update(activity_id):
     name = request.form.get("name", "")
     color = request.form.get("color") or None
-    current_client().update_activity(activity_id, name=name, color=color)
+    kwargs: dict = {"name": name}
+    if color is not None:
+        kwargs["color"] = color
+    current_client().update_activity(activity_id, **kwargs)
     flash("Activity updated.", "success")
     return redirect(url_for("activities.index"))
 

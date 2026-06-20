@@ -17,6 +17,10 @@ def create_app(config: str | type | None = None) -> Flask:
         name = config if isinstance(config, str) else None
         app.config.from_object(get_config(name))
 
+    _insecure_keys = ("dev-frontend-secret", "change-me", "")
+    if not app.debug and not app.testing and app.secret_key in _insecure_keys:
+        raise RuntimeError("SECRET_KEY must be set to a secure value in production")
+
     app.jinja_env.filters["fmt_dt"] = fmt_dt
     app.jinja_env.filters["fmt_duration"] = fmt_duration
     app.jinja_env.filters["dt_input"] = dt_input
