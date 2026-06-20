@@ -91,9 +91,9 @@ def list_entries(
     elif running is False:
         query = query.where(TimeEntry.ended_at.is_not(None))
     query = query.order_by(TimeEntry.started_at.desc())
-    if offset:
+    if offset is not None:
         query = query.offset(offset)
-    if limit:
+    if limit is not None:
         query = query.limit(limit)
     return list(db.session.scalars(query))
 
