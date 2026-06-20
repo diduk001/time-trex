@@ -41,3 +41,25 @@ class UserOut(BaseModel):
 class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+_HEX_COLOR = r"^#[0-9a-fA-F]{6}$"
+
+
+class ActivityCreateIn(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    color: str | None = Field(default=None, pattern=_HEX_COLOR)
+
+
+class ActivityUpdateIn(BaseModel):
+    name: str | None = Field(default=None, min_length=1, max_length=120)
+    color: str | None = Field(default=None, pattern=_HEX_COLOR)
+
+
+class ActivityOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    name: str
+    color: str | None
+    created_at: UtcDatetime
+    running: bool = False
