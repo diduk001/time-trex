@@ -1,1 +1,3 @@
-# create_app is added in Task 2; this file makes `app` a package.
+from app.factory import create_app  # noqa: F401
+
+__all__ = ["create_app"]

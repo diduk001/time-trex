@@ -1,0 +1,29 @@
+from flask import Flask
+
+from app.config import BaseConfig, get_config
+from app.errors import register_error_handlers
+from app.filters import dt_input, fmt_dt, fmt_duration
+
+
+def create_app(config: str | type | None = None) -> Flask:
+    app = Flask(__name__)
+    if isinstance(config, type) and issubclass(config, BaseConfig):
+        app.config.from_object(config)
+    else:
+        name = config if isinstance(config, str) else None
+        app.config.from_object(get_config(name))
+
+    app.jinja_env.filters["fmt_dt"] = fmt_dt
+    app.jinja_env.filters["fmt_duration"] = fmt_duration
+    app.jinja_env.filters["dt_input"] = dt_input
+
+    @app.context_processor
+    def inject_helpers():
+        return {"has_endpoint": lambda name: name in app.view_functions}
+
+    @app.get("/ping")
+    def ping():
+        return {"status": "ok"}
+
+    register_error_handlers(app)
+    return app
