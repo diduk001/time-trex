@@ -10,7 +10,8 @@ http:
     type: json
     data: |-
       {
-        
+        "name": "Test activity",
+        "color": "#10CC10"
       }
   auth:
     type: bearer
