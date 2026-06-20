@@ -63,3 +63,38 @@ class ActivityOut(BaseModel):
     color: str | None
     created_at: UtcDatetime
     running: bool = False
+
+
+class EntryStartIn(BaseModel):
+    activity_id: int
+    started_at: UtcDatetime | None = None
+    note: str | None = Field(default=None, max_length=500)
+
+
+class EntryStopIn(BaseModel):
+    ended_at: UtcDatetime | None = None
+
+
+class EntryCreateIn(BaseModel):
+    activity_id: int
+    started_at: UtcDatetime
+    ended_at: UtcDatetime
+    note: str | None = Field(default=None, max_length=500)
+
+
+class EntryUpdateIn(BaseModel):
+    activity_id: int | None = None
+    started_at: UtcDatetime | None = None
+    ended_at: UtcDatetime | None = None
+    note: str | None = Field(default=None, max_length=500)
+
+
+class EntryOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    activity_id: int
+    started_at: UtcDatetime
+    ended_at: UtcDatetime | None
+    note: str | None
+    created_at: UtcDatetime
+    duration_seconds: int | None = None
