@@ -4,6 +4,7 @@ import app.models  # noqa: F401  (ensure models are registered for migrations)
 from app.activities.routes import bp as activities_bp
 from app.auth.routes import bp as auth_bp
 from app.config import BaseConfig, get_config
+from app.entries.routes import bp as entries_bp
 from app.errors import register_error_handlers, register_jwt_handlers
 from app.extensions import db, jwt, migrate
 from app.routes.health import bp as health_bp
@@ -24,6 +25,7 @@ def create_app(config: str | type[BaseConfig] | None = None) -> Flask:
     flask_app.register_blueprint(health_bp)
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(activities_bp)
+    flask_app.register_blueprint(entries_bp)
 
     register_error_handlers(flask_app)
     register_jwt_handlers()
