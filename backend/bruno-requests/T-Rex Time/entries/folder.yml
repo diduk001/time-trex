@@ -1,0 +1,9 @@
+info:
+  name: entries
+  type: folder
+  seq: 4
+
+request:
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc4MTkyMzg1MywianRpIjoiZTdmOWJmZGEtOGZkNC00YjhjLTlhOTEtZWRhMDEzODg2ZDU3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3ODE5MjM4NTMsImNzcmYiOiJiNTgzMGU5Mi0zZjI4LTQ0NzYtYTIyMC04MTQ4MWY1ZGQ5ZDUiLCJleHAiOjE3ODIwMTAyNTN9.dhac_EsOgjE_0Su1zxCHZHFstxMM8DjtUZP8W9KTYJ0
