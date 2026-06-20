@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Create one dataset per activity
     const datasets = activityNames.map((activityName, index) => {
       const data = timeline.buckets.map((b) => {
-        const activity = b.by_activity.find((a) => a.name === activityName);
+        const activity = (b.by_activity || []).find((a) => a.name === activityName);
         return activity ? activity.total_seconds / 3600 : 0;
       });
 
