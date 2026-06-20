@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Stats · Time T-Rex{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Statistics <small class="text-muted fs-6">(UTC)</small></h1>
+
+<form method="get" action="{{ url_for('stats.index') }}" class="row g-2 align-items-end mb-4">
+  <div class="col-auto">
+    <label class="form-label">From</label>
+    <input class="form-control" type="date" name="from" value="{{ from_date }}">
+  </div>
+  <div class="col-auto">
+    <label class="form-label">To</label>
+    <input class="form-control" type="date" name="to" value="{{ to_date }}">
+  </div>
+  <div class="col-auto">
+    <label class="form-label">Group by</label>
+    <select class="form-select" name="group_by">
+      {% for opt in ["day", "week", "month"] %}
+        <option value="{{ opt }}" {% if opt == group_by %}selected{% endif %}>{{ opt }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary" type="submit">Apply</button>
+  </div>
+</form>
+
+<div class="row">
+  <div class="col-md-5">
+    <h2 class="h6">Time per activity</h2>
+    <canvas id="summary-chart"></canvas>
+  </div>
+  <div class="col-md-7">
+    <h2 class="h6">Timeline ({{ group_by }})</h2>
+    <canvas id="timeline-chart"></canvas>
+  </div>
+</div>
+
+<script id="summary-data" type="application/json">{{ summary|tojson }}</script>
+<script id="timeline-data" type="application/json">{{ timeline|tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

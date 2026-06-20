@@ -5,6 +5,7 @@ from app.auth.routes import bp as auth_bp
 from app.config import BaseConfig, get_config
 from app.errors import register_error_handlers
 from app.filters import dt_input, fmt_dt, fmt_duration
+from app.stats.routes import bp as stats_bp
 from app.tracking.routes import bp as tracking_bp
 
 
@@ -31,5 +32,6 @@ def create_app(config: str | type | None = None) -> Flask:
     app.register_blueprint(auth_bp)
     app.register_blueprint(activities_bp)
     app.register_blueprint(tracking_bp)
+    app.register_blueprint(stats_bp)
     register_error_handlers(app)
     return app
