@@ -8,6 +8,7 @@ from app.entries.routes import bp as entries_bp
 from app.errors import register_error_handlers, register_jwt_handlers
 from app.extensions import db, jwt, migrate
 from app.routes.health import bp as health_bp
+from app.stats.routes import bp as stats_bp
 
 
 def create_app(config: str | type[BaseConfig] | None = None) -> Flask:
@@ -26,6 +27,7 @@ def create_app(config: str | type[BaseConfig] | None = None) -> Flask:
     flask_app.register_blueprint(auth_bp)
     flask_app.register_blueprint(activities_bp)
     flask_app.register_blueprint(entries_bp)
+    flask_app.register_blueprint(stats_bp)
 
     register_error_handlers(flask_app)
     register_jwt_handlers()
