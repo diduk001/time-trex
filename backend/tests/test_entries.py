@@ -206,3 +206,61 @@ def test_entry_isolation_between_users(client, auth_headers, make_user):
     bob = make_user("bob")
     assert client.get(f"/api/entries/{eid}", headers=bob).status_code == 404
     assert client.get("/api/entries", headers=bob).get_json() == []
+
+
+def test_list_entries_with_offset_zero(client, auth_headers):
+    aid = _activity(client, auth_headers)
+    # Create 3 entries
+    for i in range(3):
+        client.post(
+            "/api/entries",
+            headers=auth_headers,
+            json={
+                "activity_id": aid,
+                "started_at": f"2026-06-{20-i}T09:00:00Z",
+                "ended_at": f"2026-06-{20-i}T10:00:00Z",
+            },
+        )
+    # With offset=0, should return all 3
+    resp = client.get("/api/entries?offset=0", headers=auth_headers)
+    assert resp.status_code == 200
+    assert len(resp.get_json()) == 3
+
+
+def test_list_entries_with_limit_zero(client, auth_headers):
+    aid = _activity(client, auth_headers)
+    # Create 2 entries
+    for i in range(2):
+        client.post(
+            "/api/entries",
+            headers=auth_headers,
+            json={
+                "activity_id": aid,
+                "started_at": f"2026-06-{20-i}T09:00:00Z",
+                "ended_at": f"2026-06-{20-i}T10:00:00Z",
+            },
+        )
+    # With limit=0, should return empty list
+    resp = client.get("/api/entries?limit=0", headers=auth_headers)
+    assert resp.status_code == 200
+    assert len(resp.get_json()) == 0
+
+
+def test_list_entries_with_offset_and_limit(client, auth_headers):
+    aid = _activity(client, auth_headers)
+    # Create 5 entries
+    for i in range(5):
+        client.post(
+            "/api/entries",
+            headers=auth_headers,
+            json={
+                "activity_id": aid,
+                "started_at": f"2026-06-{25-i}T09:00:00Z",
+                "ended_at": f"2026-06-{25-i}T10:00:00Z",
+            },
+        )
+    # With offset=2 and limit=2, should return entries 2 and 3 (0-indexed)
+    resp = client.get("/api/entries?offset=2&limit=2", headers=auth_headers)
+    assert resp.status_code == 200
+    entries = resp.get_json()
+    assert len(entries) == 2
