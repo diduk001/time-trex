@@ -62,6 +62,25 @@ def test_register_duplicate_login_flashes(client):
     assert b"Login already taken" in resp.data
 
 
+@responses.activate
+def test_register_validation_error(client):
+    responses.add(
+        responses.POST,
+        f"{BASE}/api/auth/register",
+        json={
+            "error": {
+                "code": "validation_error",
+                "message": "Password too short",
+                "details": None,
+            }
+        },
+        status=422,
+    )
+    resp = client.post("/register", data={"login": "bob", "password": "short"})
+    assert resp.status_code != 302
+    assert b"Password too short" in resp.data
+
+
 def test_logout_clears_session(auth_client):
     resp = auth_client.post("/logout")
     assert resp.status_code == 302

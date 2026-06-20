@@ -15,8 +15,9 @@ def login():
     try:
         result = current_client().login(login_value, password)
     except BackendError as exc:
-        message = "Invalid login or password." if exc.status == 401 else exc.message
-        flash(message, "danger")
+        if exc.status != 401:
+            raise
+        flash("Invalid login or password.", "danger")
         return render_template("auth/login.html", login=login_value), 400
     session["access_token"] = result["access_token"]
     return redirect("/")  # tracking home
