@@ -82,3 +82,57 @@ def test_summary_empty(client, auth_headers):
 
 def test_summary_requires_auth(client):
     assert client.get("/api/stats/summary").status_code == 401
+
+
+def test_timeline_groups_by_day(client, auth_headers):
+    work = _activity(client, auth_headers, "Work")
+    _manual(client, auth_headers, work, "2026-06-18T09:00:00Z", "2026-06-18T10:00:00Z")  # day 18
+    _manual(client, auth_headers, work, "2026-06-19T09:00:00Z", "2026-06-19T11:00:00Z")  # day 19
+    resp = client.get(
+        "/api/stats/timeline?from=2026-06-18T00:00:00Z&to=2026-06-20T00:00:00Z&group_by=day",
+        headers=auth_headers,
+    )
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["group_by"] == "day"
+    totals = {b["period"]: b["total_seconds"] for b in body["buckets"]}
+    assert totals == {"2026-06-18": 3600, "2026-06-19": 7200}
+
+
+def test_timeline_splits_entry_across_day_boundary(client, auth_headers):
+    work = _activity(client, auth_headers, "Work")
+    # 1h each day
+    _manual(client, auth_headers, work, "2026-06-18T23:00:00Z", "2026-06-19T01:00:00Z")
+    resp = client.get(
+        "/api/stats/timeline?from=2026-06-18T00:00:00Z&to=2026-06-20T00:00:00Z&group_by=day",
+        headers=auth_headers,
+    )
+    totals = {b["period"]: b["total_seconds"] for b in resp.get_json()["buckets"]}
+    assert totals["2026-06-18"] == 3600
+    assert totals["2026-06-19"] == 3600
+
+
+def test_timeline_group_by_week(client, auth_headers):
+    work = _activity(client, auth_headers, "Work")
+    # Tue, ISO week starts Mon 15th
+    _manual(client, auth_headers, work, "2026-06-16T09:00:00Z", "2026-06-16T10:00:00Z")
+    resp = client.get(
+        "/api/stats/timeline?from=2026-06-15T00:00:00Z&to=2026-06-22T00:00:00Z&group_by=week",
+        headers=auth_headers,
+    )
+    buckets = resp.get_json()["buckets"]
+    assert buckets[0]["period"] == "2026-06-15"
+    assert buckets[0]["total_seconds"] == 3600
+
+
+def test_timeline_requires_from_and_to(client, auth_headers):
+    resp = client.get("/api/stats/timeline?group_by=day", headers=auth_headers)
+    assert resp.status_code == 422
+
+
+def test_timeline_invalid_group_by_is_422(client, auth_headers):
+    resp = client.get(
+        "/api/stats/timeline?from=2026-06-18T00:00:00Z&to=2026-06-19T00:00:00Z&group_by=year",
+        headers=auth_headers,
+    )
+    assert resp.status_code == 422
