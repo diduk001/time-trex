@@ -82,3 +82,14 @@ def test_create_entry_sends_payload():
         "ended_at": "2026-06-20T10:00:00Z",
         "note": "hi",
     }
+
+
+@responses.activate
+def test_create_activity_without_color_sends_payload():
+    responses.add(responses.POST, f"{BASE}/api/activities", json={"id": 1}, status=201)
+    _client("t").create_activity("Work")
+    import json as _json
+
+    body = _json.loads(responses.calls[0].request.body)
+    assert body == {"name": "Work"}
+    assert "color" not in body

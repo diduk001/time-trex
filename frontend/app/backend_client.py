@@ -69,7 +69,10 @@ class BackendClient:
         return self._request("GET", "/api/activities")
 
     def create_activity(self, name, color=None):
-        return self._request("POST", "/api/activities", json={"name": name, "color": color})
+        payload = {"name": name}
+        if color is not None:
+            payload["color"] = color
+        return self._request("POST", "/api/activities", json=payload)
 
     def get_activity(self, activity_id):
         return self._request("GET", f"/api/activities/{activity_id}")
