@@ -1,0 +1,17 @@
+info:
+  name: List
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: http://127.0.0.1:5000/api/activities
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc4MTkyMzg1MywianRpIjoiZTdmOWJmZGEtOGZkNC00YjhjLTlhOTEtZWRhMDEzODg2ZDU3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3ODE5MjM4NTMsImNzcmYiOiJiNTgzMGU5Mi0zZjI4LTQ0NzYtYTIyMC04MTQ4MWY1ZGQ5ZDUiLCJleHAiOjE3ODIwMTAyNTN9.dhac_EsOgjE_0Su1zxCHZHFstxMM8DjtUZP8W9KTYJ0
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

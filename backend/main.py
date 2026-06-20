@@ -1,8 +1,7 @@
-from flask import Flask
+from dotenv import load_dotenv
 
-app = Flask(__name__)
+load_dotenv()
 
+from app import create_app  # noqa: E402
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+app = create_app()
