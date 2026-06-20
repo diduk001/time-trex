@@ -89,6 +89,12 @@ def test_start_on_foreign_activity_is_404(client, auth_headers, make_user):
 
 def test_entries_require_auth(client):
     assert client.post("/api/entries/start", json={"activity_id": 1}).status_code == 401
+    assert client.post("/api/entries/1/stop", json={}).status_code == 401
+    assert client.post("/api/entries", json={}).status_code == 401
+    assert client.get("/api/entries").status_code == 401
+    assert client.get("/api/entries/1").status_code == 401
+    assert client.patch("/api/entries/1", json={}).status_code == 401
+    assert client.delete("/api/entries/1").status_code == 401
 
 
 def test_list_entries_newest_first(client, auth_headers):

@@ -60,3 +60,7 @@ def test_activities_are_isolated_per_user(client, auth_headers, make_user):
 
 def test_activities_require_auth(client):
     assert client.get("/api/activities").status_code == 401
+    assert client.post("/api/activities", json={"name": "X"}).status_code == 401
+    assert client.get("/api/activities/1").status_code == 401
+    assert client.patch("/api/activities/1", json={"name": "X"}).status_code == 401
+    assert client.delete("/api/activities/1").status_code == 401

@@ -136,3 +136,7 @@ def test_timeline_invalid_group_by_is_422(client, auth_headers):
         headers=auth_headers,
     )
     assert resp.status_code == 422
+
+
+def test_timeline_requires_auth(client):
+    assert client.get("/api/stats/timeline").status_code == 401
